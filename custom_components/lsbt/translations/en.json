@@ -4,12 +4,9 @@
     "step": {
       "user": {
         "title": "Track a bus",
-        "description": "Choose a route and source. LSBT will load matching school names from the published data.",
+        "description": "Choose morning or afternoon routes. LSBT will use the corresponding published sheet.",
         "data": {
-          "period": "Schedule",
-          "route": "Route number",
-          "url": "Published data URL",
-          "interval": "Poll interval (seconds)"
+          "period": "Schedule"
         }
       },
       "school": {
@@ -17,6 +14,15 @@
         "description": "Only schools listed for the selected route are available.",
         "data": {
           "school": "School"
+        }
+      },
+      "route": {
+        "title": "Choose route",
+        "description": "Enter the bus route number. The source defaults to the selected schedule's sheet.",
+        "data": {
+          "route": "Route number",
+          "url": "Published data URL",
+          "interval": "Poll interval (seconds)"
         }
       }
     },
