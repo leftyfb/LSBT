@@ -14,9 +14,10 @@ def test_csv():
     assert result["minutes_late"] == 15
     assert result["covering_bus"] == "LT33"
 
-def test_blank_is_unknown_not_on_time():
+def test_blank_means_on_time():
     item = parser.find_school(parser.parse_routes(CSV, "text/csv"), "17", "CCA/LC/Daley")
-    assert item["minutes_late"] is None
+    assert item["minutes_late"] == 0
+    assert item["status"] == "on_time"
 
 def test_html():
     html = "<table><tr><th>PM Route</th><th>First School</th><th>Minutes Late</th></tr><tr><td>7</td><td>Wang</td><td>12</td></tr></table>"
@@ -25,3 +26,15 @@ def test_html():
 def test_shell_fails():
     with pytest.raises(ValueError):
         parser.parse_routes("<html><div id='root'></div></html>")
+
+def test_replacement_without_delay():
+    row = "PM Route,First School,Minutes Late,Covering Bus\\n14,McAvinnue,,L21\\n".replace("\\n", "\n")
+    item = parser.find_school(parser.parse_routes(row, "text/csv"), "14", "McAvinnue")
+    assert item["minutes_late"] == 0
+    assert item["status"] == "covering_bus"
+
+def test_invalid_delay_not_treated_as_on_time():
+    row = "PM Route,First School,Minutes Late\\n14,McAvinnue,unknown-delay\\n".replace("\\n", "\n")
+    item = parser.find_school(parser.parse_routes(row, "text/csv"), "14", "McAvinnue")
+    assert item["minutes_late"] is None
+    assert item["status"] == "unknown"
