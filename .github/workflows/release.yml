@@ -1,0 +1,50 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install parser test dependencies
+        run: python -m pip install pytest beautifulsoup4
+      - name: Validate tag matches integration version
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          tag = os.environ["GITHUB_REF_NAME"]
+          version = json.loads(Path("custom_components/lsbt/manifest.json").read_text())["version"]
+          if tag != version:
+              raise SystemExit(f"Release tag {tag!r} does not match manifest version {version!r}")
+          print(f"Verified version: {version}")
+          PY
+      - name: Check Python syntax
+        run: python -m compileall -q custom_components tests
+      - name: Run tests
+        run: python -m pytest -q tests
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          if [[ "$TAG" =~ (a|b|rc)[0-9]+$ ]]; then
+            gh release create "$TAG" --title "LSBT $TAG" --prerelease --generate-notes --verify-tag
+          else
+            gh release create "$TAG" --title "LSBT $TAG" --generate-notes --verify-tag
+          fi
