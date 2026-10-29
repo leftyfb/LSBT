@@ -4,18 +4,27 @@
     "step": {
       "user": {
         "title": "Track a bus",
-        "description": "Choose an exact route and school. AM requires its published data URL.",
+        "description": "Choose a route and source. LSBT will load matching school names from the published data.",
         "data": {
           "period": "Schedule",
           "route": "Route number",
-          "school": "School",
           "url": "Published data URL",
           "interval": "Poll interval (seconds)"
+        }
+      },
+      "school": {
+        "title": "Select school",
+        "description": "Only schools listed for the selected route are available.",
+        "data": {
+          "school": "School"
         }
       }
     },
     "error": {
-      "invalid_selection": "Route and school are required."
+      "invalid_selection": "Route and school are required.",
+      "cannot_connect": "Could not retrieve or read route data.",
+      "route_not_found": "Route not found in published data.",
+      "no_schools": "No schools listed for this route."
     },
     "abort": {
       "already_configured": "Already configured."
