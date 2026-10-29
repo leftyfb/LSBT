@@ -27,7 +27,10 @@ class BusSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get(self.entity_description.key)
+        value = self.coordinator.data.get(self.entity_description.key)
+        if self.entity_description.key == "covering_bus" and not value:
+            return "Not listed"
+        return value
 
     @property
     def extra_state_attributes(self):
