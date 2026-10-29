@@ -61,7 +61,7 @@ def find_school(routes, route, school):
         for item in row["schools"]:
             if item["school"].casefold() == school.strip().casefold():
                 delay = item["minutes_late"]
-                status = ("delay_reported" if delay is not None and delay > 0
-                          else "covering_bus" if item["covering_bus"] else "on_time" if delay == 0 else "unknown")
+                status = ("delayed" if delay is not None and delay > 0
+                          else "on_time" if delay == 0 else "unknown")
                 return {**item, "route": row["route"], "status": status}
     return None
