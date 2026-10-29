@@ -31,10 +31,17 @@ def test_replacement_without_delay():
     row = "PM Route,First School,Minutes Late,Covering Bus\\n14,McAvinnue,,L21\\n".replace("\\n", "\n")
     item = parser.find_school(parser.parse_routes(row, "text/csv"), "14", "McAvinnue")
     assert item["minutes_late"] == 0
-    assert item["status"] == "covering_bus"
+    assert item["status"] == "on_time"
 
 def test_invalid_delay_not_treated_as_on_time():
     row = "PM Route,First School,Minutes Late\\n14,McAvinnue,unknown-delay\\n".replace("\\n", "\n")
     item = parser.find_school(parser.parse_routes(row, "text/csv"), "14", "McAvinnue")
     assert item["minutes_late"] is None
     assert item["status"] == "unknown"
+
+def test_delayed_bus_can_also_have_covering_vehicle():
+    row = "PM Route,First School,Minutes Late,Covering Bus\\n14,McAvinnue,15,L21\\n".replace("\\n", "\n")
+    item = parser.find_school(parser.parse_routes(row, "text/csv"), "14", "McAvinnue")
+    assert item["status"] == "delayed"
+    assert item["minutes_late"] == 15
+    assert item["covering_bus"] == "L21"
