@@ -45,3 +45,10 @@ def test_delayed_bus_can_also_have_covering_vehicle():
     assert item["status"] == "delayed"
     assert item["minutes_late"] == 15
     assert item["covering_bus"] == "L21"
+
+
+def test_missing_covering_bus_remains_blank_in_parser():
+    item = parser.find_school(parser.parse_routes(CSV, "text/csv"), "17", "CCA/LC/Daley")
+    assert item["covering_bus"] is None
+    assert item["minutes_late"] == 0
+    assert item["status"] == "on_time"
