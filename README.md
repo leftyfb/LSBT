@@ -19,3 +19,17 @@ Sensors: minutes late, covering bus, and status. Blank delay cells are interpret
 ## License / attribution
 
 Not affiliated with Lowell Public Schools or Smartsheet. No credentials required.
+
+## Publishing and receiving updates
+
+The integration version lives in `custom_components/lsbt/manifest.json`. For each new version:
+
+1. Commit and push changes, increasing the manifest version (for example, from `0.1.0b1` to `0.1.0b2`).
+2. Create and push a tag whose name **exactly matches** the manifest version, at the corresponding commit: `git tag 0.1.0b1 && git push origin 0.1.0b1`. Do not reuse a published tag.
+3. GitHub Actions runs the parser tests and verifies the tag/version match, then publishes a GitHub release. Versions ending in `aN`, `bN`, or `rcN` become prereleases.
+4. HACS users who enable **prerelease/beta versions** for this repository can receive beta update notices; normal release updates are offered through the integration's update entity. A GitHub release is required for HACS to use the release version.
+5. In Home Assistant, open **Settings → Updates** (or the HACS repository page), install the offered update, and **restart Home Assistant**. HACS checks periodically; use the repository's **Update information** / **Redownload** action to refresh sooner.
+
+HACS notification does **not** mean automatic installation, and restarting Home Assistant does not itself download code. If you installed the integration manually rather than through HACS, update the files manually instead.
+
+This is currently an experimental custom repository and not an official HACS catalog entry.
