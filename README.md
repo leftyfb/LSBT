@@ -8,9 +8,9 @@ An **unofficial, experimental** Home Assistant custom integration for Lowell Pub
 
 Add this repository as a HACS custom repository (category **Integration**) or copy `custom_components/lsbt` into Home Assistant's `custom_components` directory. Restart Home Assistant, then visit **Settings → Devices & services → Add integration → Lowell School Bus Tracker**.
 
-Configure a route, its school, AM or PM schedule, a public source URL, and polling interval (30–3600 seconds, default 60). PM defaults to the known published Smartsheet page. For AM you must supply the actual AM source URL. Multiple schools/routes may be added as separate entries.
+Configure a route, its school, AM or PM schedule, a public source URL, and polling interval (30–3600 seconds, default 60). PM defaults to the known published Smartsheet page. For AM, the AM published sheet is selected automatically; PM uses a separate published sheet. The source URL may still be overridden during setup. Multiple schools/routes may be added as separate entries.
 
-Sensors: minutes late, covering bus, and status. Blank delay cells are interpreted as **0 minutes late / on_time** for LSBT reporting. Covering-bus information is informational and does not change delay status; malformed delay values remain unknown. Status is **on_time** for zero delay, **delayed** for a positive delay, and **unknown** for an unreadable value. Notifications are user-created HA automations; the integration does not send alerts automatically. An optional covering-bus change alert can be configured separately. This reflects the published sheet convention, not a guarantee of actual arrival time. Fetch and parsing failures mark entities unavailable instead of returning a false on-time value. HA automations can notify on state changes through the companion app or Telegram.
+Sensors: minutes late, covering bus, and status. Blank covering-bus cells display **Not listed** rather than Unknown, with no implication of a delay. Blank delay cells are interpreted as **0 minutes late / on_time** for LSBT reporting. Covering-bus information is informational and does not change delay status; malformed delay values remain unknown. Status is **on_time** for zero delay, **delayed** for a positive delay, and **unknown** for an unreadable value. Notifications are user-created HA automations; the integration does not send alerts automatically. An optional covering-bus change alert can be configured separately. This reflects the published sheet convention, not a guarantee of actual arrival time. Fetch and parsing failures mark entities unavailable instead of returning a false on-time value. HA automations can notify on state changes through the companion app or Telegram.
 
 ## Tests
 
@@ -37,3 +37,8 @@ This is currently an experimental custom repository and not an official HACS cat
 ## School selection
 
 During setup, choose the schedule, route number, and source URL first. LSBT downloads the selected route's schools and offers them in a dropdown on the next screen. Names are taken verbatim from the source, so no manual school spelling is needed. If the source cannot be read or the route is absent, setup shows an error instead of offering misleading choices. Existing configured routes are unaffected.
+
+
+### AM / PM configuration
+
+Setup first asks for AM or PM, then defaults the URL to that schedule's public Smartsheet. Already-configured entries retain their saved URL; if an existing AM entry points to the PM sheet, remove and re-add that entry with the AM schedule or otherwise change its stored source. A blank covering-bus cell displays **Not listed**; the covering-bus sensor is informational only.
