@@ -36,14 +36,15 @@ def parse_routes(content, content_type="text/html"):
             if start >= len(cells) or not cells[start].strip():
                 continue
             end = schools[i + 1] if i + 1 < len(schools) else len(headers)
-            delay, cover = None, None
+            delay, cover = 0, None
             for j in range(start + 1, min(end, len(cells), len(headers))):
                 name, value = headers[j], cells[j].strip()
-                if ("late" in name or "delay" in name) and value:
-                    try:
-                        delay = int(value.lstrip("+").split()[0])
-                    except ValueError:
-                        pass
+                if "late" in name or "delay" in name:
+                    if value:
+                        try:
+                            delay = int(value.lstrip("+").split()[0])
+                        except ValueError:
+                            delay = None  # Unknown format must not imply on time
                 if "cover" in name or "replacement" in name:
                     cover = value or None
             record["schools"].append({"school": cells[start].strip(), "minutes_late": delay, "covering_bus": cover})
@@ -61,6 +62,6 @@ def find_school(routes, route, school):
             if item["school"].casefold() == school.strip().casefold():
                 delay = item["minutes_late"]
                 status = ("delay_reported" if delay is not None and delay > 0
-                          else "covering_bus" if item["covering_bus"] else "no_delay_reported")
+                          else "covering_bus" if item["covering_bus"] else "on_time" if delay == 0 else "unknown")
                 return {**item, "route": row["route"], "status": status}
     return None
