@@ -1,7 +1,7 @@
 {
   "domain": "lsbt",
   "name": "Lowell School Bus Tracker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "documentation": "https://github.com/leftyfb/LSBT",
   "issue_tracker": "https://github.com/leftyfb/LSBT/issues",
   "codeowners": [
