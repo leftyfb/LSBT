@@ -33,3 +33,7 @@ The integration version lives in `custom_components/lsbt/manifest.json`. For eac
 HACS notification does **not** mean automatic installation, and restarting Home Assistant does not itself download code. If you installed the integration manually rather than through HACS, update the files manually instead.
 
 This is currently an experimental custom repository and not an official HACS catalog entry.
+
+## School selection
+
+During setup, choose the schedule, route number, and source URL first. LSBT downloads the selected route's schools and offers them in a dropdown on the next screen. Names are taken verbatim from the source, so no manual school spelling is needed. If the source cannot be read or the route is absent, setup shows an error instead of offering misleading choices. Existing configured routes are unaffected.
