@@ -1,3 +1,5 @@
+![Main Screenshot](custom_components/lsbt/brand/icon.png)
+
 # Lowell School Bus Tracker (LSBT)
 
 An **unofficial, experimental** Home Assistant custom integration for Lowell Public Schools' published school bus data.
